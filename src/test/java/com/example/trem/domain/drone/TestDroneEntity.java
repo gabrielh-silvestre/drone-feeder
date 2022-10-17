@@ -1,5 +1,7 @@
 package com.example.trem.domain.drone;
 
+import com.example.trem.domain.delivery.entity.Delivery;
+import com.example.trem.domain.delivery.factory.DeliveryFactory;
 import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.entity.DroneStatus;
 import com.example.trem.domain.drone.exception.DroneException;
@@ -50,8 +52,9 @@ public class TestDroneEntity {
   @DisplayName("should update status of a Drone entity")
   public void shouldUpdateStatusDroneEntity() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
+    Delivery delivery = DeliveryFactory.create();
 
-    drone.deliver();
+    drone.deliver(delivery);
     assertEquals(DroneStatus.DELIVERING, drone.getStatus());
 
     drone.returnToBase();
@@ -111,6 +114,7 @@ public class TestDroneEntity {
   @DisplayName("should throw exception when update a Drone entity with invalid data")
   public void shouldThrowExceptionWhenUpdateDroneEntityWithInvalidData() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
+    Delivery delivery = DeliveryFactory.create();
 
     assertThrows(
             DroneException.class,
@@ -128,6 +132,15 @@ public class TestDroneEntity {
             DroneException.class,
             () -> drone.rename("a".repeat(20)),
             "Drone name must be at most 12 characters long"
+    );
+
+    assertThrows(
+            DroneException.class,
+            () -> {
+              drone.deliver(delivery);
+              drone.deliver(delivery);
+            },
+            "Drone is already assigned to this delivery"
     );
 
     assertThrows(
