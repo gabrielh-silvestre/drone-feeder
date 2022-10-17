@@ -36,7 +36,7 @@ public class DeliveryEntity implements IDelivery {
   @JoinColumn(name = "drone_id")
   private DroneEntity drone;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "delivery", cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private VideoEntity video;
 
   @Override

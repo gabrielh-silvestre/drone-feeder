@@ -22,7 +22,7 @@ public class VideoEntity implements IVideo {
   @Column(nullable = false)
   private Byte[] data;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "video", cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private DeliveryEntity delivery;
 
   @Override
