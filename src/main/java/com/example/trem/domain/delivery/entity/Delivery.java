@@ -3,6 +3,7 @@ package com.example.trem.domain.delivery.entity;
 import com.example.trem.domain.delivery.exception.DeliveryException;
 import com.example.trem.domain.delivery.exception.InvalidStatusDeliveryException;
 import com.example.trem.domain.delivery.factory.DeliveryValidatorFactory;
+import com.example.trem.domain.drone.entity.Drone;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class Delivery implements IDelivery {
   private LocalDateTime orderDate;
   private LocalDateTime deliveryDate;
   private LocalDateTime cancelDate;
+  private Drone drone;
 
   public Delivery(
           UUID id,
@@ -30,6 +32,26 @@ public class Delivery implements IDelivery {
     this.orderDate = orderDate;
     this.deliveryDate = deliveryDate;
     this.cancelDate = cancelDate;
+
+    this.validate();
+  }
+
+  public Delivery(
+          UUID id,
+          DeliveryStatus status,
+          LocalDateTime date,
+          LocalDateTime orderDate,
+          LocalDateTime deliveryDate,
+          LocalDateTime cancelDate,
+          Drone drone
+  ) {
+    this.id = id;
+    this.status = status;
+    this.createdAt = date;
+    this.orderDate = orderDate;
+    this.deliveryDate = deliveryDate;
+    this.cancelDate = cancelDate;
+    this.drone = drone;
 
     this.validate();
   }
@@ -52,6 +74,7 @@ public class Delivery implements IDelivery {
 
     this.status = DeliveryStatus.DELIVERED;
     this.deliveryDate = LocalDateTime.now();
+    this.drone.returnToBase();
 
     this.validate();
   }
@@ -63,6 +86,7 @@ public class Delivery implements IDelivery {
 
     this.status = DeliveryStatus.CANCELLED;
     this.cancelDate = LocalDateTime.now();
+    this.drone.returnToBase();
 
     this.validate();
   }
@@ -100,4 +124,10 @@ public class Delivery implements IDelivery {
   public LocalDateTime getCancelDate() {
     return cancelDate;
   }
+
+  @Override
+  public Drone getDrone() {
+    return drone;
+  }
+
 }

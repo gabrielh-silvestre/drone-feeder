@@ -114,7 +114,7 @@ public class TestDroneEntity {
   @DisplayName("should throw exception when update a Drone entity with invalid data")
   public void shouldThrowExceptionWhenUpdateDroneEntityWithInvalidData() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
-    Delivery delivery = DeliveryFactory.create();
+    Delivery delivery = DeliveryFactory.createWithDrone(drone);
 
     assertThrows(
             DroneException.class,

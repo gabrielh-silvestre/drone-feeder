@@ -1,5 +1,7 @@
 package com.example.trem.domain.delivery.entity;
 
+import com.example.trem.domain.drone.entity.Drone;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,5 +18,7 @@ public interface IDelivery {
   LocalDateTime getDeliveryDate();
 
   LocalDateTime getCancelDate();
+
+  Drone getDrone();
 
 }
