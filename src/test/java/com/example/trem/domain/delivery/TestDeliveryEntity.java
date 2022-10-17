@@ -5,6 +5,8 @@ import com.example.trem.domain.delivery.entity.DeliveryStatus;
 import com.example.trem.domain.delivery.exception.DeliveryException;
 import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.factory.DroneFactory;
+import com.example.trem.domain.video.entity.Video;
+import com.example.trem.domain.video.factory.VideoFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -84,17 +86,20 @@ public class TestDeliveryEntity {
   @Test
   @DisplayName("should complete delivery")
   public void shouldCompleteDelivery() {
+    Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
+    Video video = VideoFactory.create("teste.mp4", new Byte[0]);
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
             DeliveryStatus.PENDING,
             LocalDateTime.now(),
             null,
             null,
-            null
+            null,
+            drone
     );
 
     delivery.proccesOrder();
-    delivery.complete();
+    delivery.complete(video);
 
     assertEquals(DeliveryStatus.DELIVERED, delivery.getStatus());
     assertNotNull(delivery.getDeliveryDate());
@@ -103,13 +108,15 @@ public class TestDeliveryEntity {
   @Test
   @DisplayName("should cancel delivery")
   public void shouldCancelDelivery() {
+    Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
             DeliveryStatus.PENDING,
             LocalDateTime.now(),
             null,
             null,
-            null
+            null,
+            drone
     );
 
     delivery.proccesOrder();
@@ -137,6 +144,7 @@ public class TestDeliveryEntity {
   @Test
   @DisplayName("should throw exception when try to complete delivery with status different from IN_PROGRESS")
   public void shouldThrowExceptionWhenTryToCompleteDeliveryWithStatusDifferentFromInProgress() {
+    Video video = VideoFactory.create("teste.mp4", new Byte[0]);
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
             DeliveryStatus.PENDING,
@@ -146,7 +154,7 @@ public class TestDeliveryEntity {
             null
     );
 
-    assertThrows(DeliveryException.class, delivery::complete);
+    assertThrows(DeliveryException.class, () -> delivery.complete(video));
   }
 
   @Test

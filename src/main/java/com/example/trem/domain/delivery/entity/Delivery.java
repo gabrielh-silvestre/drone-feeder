@@ -4,8 +4,11 @@ import com.example.trem.domain.delivery.exception.DeliveryException;
 import com.example.trem.domain.delivery.exception.InvalidStatusDeliveryException;
 import com.example.trem.domain.delivery.factory.DeliveryValidatorFactory;
 import com.example.trem.domain.drone.entity.Drone;
+import com.example.trem.domain.video.entity.Video;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class Delivery implements IDelivery {
@@ -17,6 +20,7 @@ public class Delivery implements IDelivery {
   private LocalDateTime deliveryDate;
   private LocalDateTime cancelDate;
   private Drone drone;
+  private Set<Video> videos = new HashSet<>();
 
   public Delivery(
           UUID id,
@@ -56,6 +60,28 @@ public class Delivery implements IDelivery {
     this.validate();
   }
 
+  public Delivery(
+          UUID id,
+          DeliveryStatus status,
+          LocalDateTime date,
+          LocalDateTime orderDate,
+          LocalDateTime deliveryDate,
+          LocalDateTime cancelDate,
+          Drone drone,
+          Set<Video> videos
+  ) {
+    this.id = id;
+    this.status = status;
+    this.createdAt = date;
+    this.orderDate = orderDate;
+    this.deliveryDate = deliveryDate;
+    this.cancelDate = cancelDate;
+    this.drone = drone;
+    this.videos = videos;
+
+    this.validate();
+  }
+
   public void proccesOrder() throws DeliveryException {
     if (this.status != DeliveryStatus.PENDING) {
       throw new InvalidStatusDeliveryException("Delivery is not pending to be processed");
@@ -67,19 +93,20 @@ public class Delivery implements IDelivery {
     this.validate();
   }
 
-  public void complete() {
+  public void complete(Video deliveryVideo) throws DeliveryException {
     if (this.status != DeliveryStatus.IN_PROGRESS) {
       throw new InvalidStatusDeliveryException("Delivery is not in progress to be completed");
     }
 
     this.status = DeliveryStatus.DELIVERED;
     this.deliveryDate = LocalDateTime.now();
+    this.videos.add(deliveryVideo);
     this.drone.returnToBase();
 
     this.validate();
   }
 
-  public void cancel() {
+  public void cancel() throws DeliveryException {
     if (this.status != DeliveryStatus.PENDING && this.status != DeliveryStatus.IN_PROGRESS) {
       throw new InvalidStatusDeliveryException("Delivery is not pending or in progress to be canceled");
     }
@@ -128,6 +155,11 @@ public class Delivery implements IDelivery {
   @Override
   public Drone getDrone() {
     return drone;
+  }
+
+  @Override
+  public Set<Video> getVideos() {
+    return videos;
   }
 
 }
