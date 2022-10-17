@@ -1,4 +1,4 @@
-package com.example.trem.infra.repositories.video;
+package com.example.trem.infra.repositories.delivery;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface VideoEntityRepository extends JpaRepository<VideoEntity, UUID> {
+public interface DeliveryRepository extends JpaRepository<DeliveryEntity, UUID> {
 }
