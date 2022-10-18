@@ -1,7 +1,10 @@
 package com.example.trem.infra.api.controller;
 
+import com.example.trem.domain.delivery.entity.Delivery;
+import com.example.trem.domain.delivery.factory.DeliveryFactory;
 import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.factory.DroneFactory;
+import com.example.trem.infra.repositories.delivery.DeliveryRepository;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import com.example.trem.useCase.drone.dto.CreateDroneDto;
 import com.example.trem.useCase.drone.dto.UpdateDroneDto;
@@ -30,10 +33,18 @@ public class TestDroneController {
   @Autowired
   private DroneRepository droneRepository;
 
+  @Autowired
+  private DeliveryRepository deliveryRepository;
+
   private final Iterable<Drone> drones = List.of(new Drone[]{
           DroneFactory.create("Drone 1", 1.0, 1.0),
           DroneFactory.create("Drone 2", 2.0, 2.0),
           DroneFactory.create("Drone 3", 3.0, 3.0)
+  });
+
+  private final Iterable<Delivery> deliveries = List.of(new Delivery[]{
+          DeliveryFactory.createWithDrone(drones.iterator().next()),
+          DeliveryFactory.createWithDrone(drones.iterator().next()),
   });
 
   private CreateDroneDto generateCreateDto() {
@@ -84,6 +95,22 @@ public class TestDroneController {
                     .content(new ObjectMapper().writeValueAsString(drone)))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name").value("Drone 2"))
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  @DisplayName("3 - should start a delivery (PATCH /drones/{id}/start/{deliveryId})")
+  public void testStartDelivery() throws Exception {
+    Drone drone = drones.iterator().next();
+    Delivery delivery = deliveries.iterator().next();
+    droneRepository.saveAll(this.drones);
+    deliveryRepository.saveAll(this.deliveries);
+
+    mockMvc.perform(patch("/drones/{id}/start/{deliveryId}", drone.getId(), delivery.getId())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.name").value("Drone 1"))
+            .andExpect(jsonPath("$.status").value("DELIVERING"))
             .andExpect(status().isOk());
   }
 
