@@ -7,7 +7,6 @@ import com.example.trem.domain.drone.factory.DroneFactory;
 import com.example.trem.infra.repositories.delivery.DeliveryRepository;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import com.example.trem.useCase.drone.dto.CreateDroneDto;
-import com.example.trem.useCase.drone.dto.UpdateDroneDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,17 +50,6 @@ public class TestDroneController {
     Drone drone = drones.iterator().next();
 
     CreateDroneDto dto = new CreateDroneDto();
-    dto.setName(drone.getName());
-    dto.setLatitude(drone.getLatitude());
-    dto.setLongitude(drone.getLongitude());
-
-    return dto;
-  }
-
-  private UpdateDroneDto generateUpdateDto() {
-    Drone drone = drones.iterator().next();
-
-    UpdateDroneDto dto = new UpdateDroneDto();
     dto.setName(drone.getName());
     dto.setLatitude(drone.getLatitude());
     dto.setLongitude(drone.getLongitude());
