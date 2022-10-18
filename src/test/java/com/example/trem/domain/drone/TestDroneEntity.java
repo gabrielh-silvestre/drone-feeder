@@ -68,7 +68,7 @@ public class TestDroneEntity {
   @DisplayName("should throw exception when creating a Drone entity with invalid data")
   public void shouldThrowExceptionWhenCreatingDroneEntityWithInvalidData() {
     assertThrows(
-            DroneException.class,
+            NullPointerException.class,
             () -> new Drone(null, "Drone 1", 0.0, 0.0, DroneStatus.IDLE),
             "Drone id cannot be null"
     );
@@ -132,15 +132,6 @@ public class TestDroneEntity {
             DroneException.class,
             () -> drone.rename("a".repeat(20)),
             "Drone name must be at most 12 characters long"
-    );
-
-    assertThrows(
-            DroneException.class,
-            () -> {
-              drone.deliver(delivery);
-              drone.deliver(delivery);
-            },
-            "Drone is already assigned to this delivery"
     );
 
     assertThrows(

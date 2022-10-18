@@ -48,7 +48,7 @@ public class TestVideoEntity {
     Byte[] fakeFileData = new Byte[0];
 
     assertThrows(
-            VideoException.class,
+            NullPointerException.class,
             () -> new Video(null, "Video-1.mp4", fakeFileData)
     );
 

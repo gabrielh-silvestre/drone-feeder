@@ -2,7 +2,6 @@ package com.example.trem.infra.api.controller;
 
 import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.factory.DroneFactory;
-import com.example.trem.infra.repositories.drone.DroneEntityMapper;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
