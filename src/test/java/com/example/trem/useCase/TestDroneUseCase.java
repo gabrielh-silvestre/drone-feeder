@@ -184,7 +184,7 @@ public class TestDroneUseCase {
     CreateDroneDto createDto = this.createDroneDto();
     DroneDto createdDrone = droneUseCase.create(createDto);
     DroneDto startDto = droneUseCase.startDelivery(createdDrone.getId(), deliveryEntity.getId());
-    
+
     assertEquals(DroneStatus.DELIVERING, startDto.getStatus());
   }
 
