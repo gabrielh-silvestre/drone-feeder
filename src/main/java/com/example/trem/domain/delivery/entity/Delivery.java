@@ -7,7 +7,6 @@ import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.video.entity.Video;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,7 +19,7 @@ public class Delivery implements IDelivery {
   private LocalDateTime deliveryDate;
   private LocalDateTime cancelDate;
   private Drone drone;
-  private Set<Video> videos = new HashSet<>();
+  private Video video;
 
   public Delivery(
           UUID id,
@@ -68,7 +67,7 @@ public class Delivery implements IDelivery {
           LocalDateTime deliveryDate,
           LocalDateTime cancelDate,
           Drone drone,
-          Set<Video> videos
+          Video video
   ) {
     this.id = id;
     this.status = status;
@@ -77,7 +76,7 @@ public class Delivery implements IDelivery {
     this.deliveryDate = deliveryDate;
     this.cancelDate = cancelDate;
     this.drone = drone;
-    this.videos = videos;
+    this.video = video;
 
     this.validate();
   }
@@ -100,7 +99,7 @@ public class Delivery implements IDelivery {
 
     this.status = DeliveryStatus.DELIVERED;
     this.deliveryDate = LocalDateTime.now();
-    this.videos.add(deliveryVideo);
+    this.video = deliveryVideo;
     this.drone.returnToBase();
 
     this.validate();
@@ -158,8 +157,8 @@ public class Delivery implements IDelivery {
   }
 
   @Override
-  public Set<Video> getVideos() {
-    return videos;
+  public Video getVideo() {
+    return video;
   }
 
 }

@@ -4,7 +4,6 @@ import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.video.entity.Video;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 public interface IDelivery {
@@ -23,6 +22,6 @@ public interface IDelivery {
 
   Drone getDrone();
 
-  Set<Video> getVideos();
+  Video getVideo();
 
 }

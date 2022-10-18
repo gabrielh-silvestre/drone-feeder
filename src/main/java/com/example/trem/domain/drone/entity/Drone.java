@@ -70,6 +70,7 @@ public class Drone implements IDrone {
               throw new DroneException("Delivery already assigned to this drone");
             });
 
+    delivery.proccesOrder();
     this.deliveries.add(delivery);
 
     this.status = DroneStatus.DELIVERING;
