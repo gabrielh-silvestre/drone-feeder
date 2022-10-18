@@ -11,7 +11,7 @@ import com.example.trem.infra.repositories.drone.DroneEntityMapper;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import com.example.trem.useCase.delivery.dto.DeliveryDto;
 import com.example.trem.useCase.delivery.dto.DeliveryDtoMapper;
-import com.example.trem.useCase.exception.NotFoundException;
+import com.example.trem.useCase.shared.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class DeliveryUseCase {
     return DeliveryDtoMapper.toDto(delivery);
   }
 
-  public DeliveryDto procces(UUID id) {
+  public DeliveryDto process(UUID id) {
     Optional<DeliveryEntity> optDelivery = deliveryRepository.findById(id);
 
     if (optDelivery.isEmpty()) {

@@ -1,4 +1,4 @@
-package com.example.trem.useCase.exception;
+package com.example.trem.useCase.shared.exception;
 
 public class NotFoundException extends RuntimeException {
 
