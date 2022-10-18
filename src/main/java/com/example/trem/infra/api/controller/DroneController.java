@@ -31,6 +31,12 @@ public class DroneController {
     return this.droneUseCase.update(UUID.fromString(id), dto);
   }
 
+  @PutMapping("/{id}/start/{deliveryId}")
+  @ResponseBody
+  public DroneDto startDrone(@PathVariable String id, @PathVariable String deliveryId) {
+    return this.droneUseCase.startDelivery(UUID.fromString(id), UUID.fromString(deliveryId));
+  }
+
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteDrone(@PathVariable String id) {
@@ -45,8 +51,8 @@ public class DroneController {
 
   @GetMapping("/{id}")
   @ResponseBody
-  public DroneDto getDrone(@PathVariable String id) {
-    return this.droneUseCase.get(UUID.fromString(id));
+  public DroneDto getDrone(@PathVariable UUID id) {
+    return this.droneUseCase.get(id);
   }
 
 }

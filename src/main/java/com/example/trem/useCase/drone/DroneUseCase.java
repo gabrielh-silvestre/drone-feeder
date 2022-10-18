@@ -53,12 +53,16 @@ public class DroneUseCase {
   }
 
   public DroneDto startDelivery(UUID id, UUID deliveryId) {
-    Optional<DroneEntity> optDrone = droneRepository.findById(id);
+    Optional<DroneEntity> optDrone = droneRepository.findAll().stream()
+            .filter(droneEntity -> droneEntity.getId().equals(id))
+            .findFirst();
     if (optDrone.isEmpty()) {
       throw new NotFoundException("Drone not found");
     }
 
-    Optional<DeliveryEntity> optDelivery = deliveryRepository.findById(deliveryId);
+    Optional<DeliveryEntity> optDelivery = deliveryRepository.findAll().stream()
+            .filter(deliveryEntity -> deliveryEntity.getId().equals(deliveryId))
+            .findFirst();
     if (optDelivery.isEmpty()) {
       throw new NotFoundException("Delivery not found");
     }
@@ -82,7 +86,10 @@ public class DroneUseCase {
   }
 
   public DroneDto get(UUID id) {
-    Optional<DroneEntity> optDrone = droneRepository.findById(id);
+    Optional<DroneEntity> optDrone = droneRepository.findAll()
+            .stream()
+            .filter(drone -> drone.getId().equals(id))
+            .findFirst();
 
     if (optDrone.isEmpty()) {
       throw new NotFoundException("Drone not found");

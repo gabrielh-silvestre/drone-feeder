@@ -15,6 +15,7 @@ import com.example.trem.useCase.shared.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +29,9 @@ public class DeliveryUseCase {
   private DroneRepository droneRepository;
 
   public DeliveryDto create(UUID droneId) {
-    Optional<DroneEntity> optDroneEntity = droneRepository.findById(droneId);
+    Optional<DroneEntity> optDroneEntity = droneRepository.findAll().stream()
+      .filter(droneEntity -> droneEntity.getId().equals(droneId))
+      .findFirst();
 
     if (optDroneEntity.isEmpty()) {
       throw new NotFoundException("Drone not found");
@@ -70,6 +73,17 @@ public class DeliveryUseCase {
     deliveryRepository.save(DeliveryEntityMapper.toEntity(delivery));
 
     return DeliveryDtoMapper.toDto(delivery);
+  }
+
+  public Iterable<DeliveryDto> getAll() {
+    Iterable<DeliveryEntity> deliveryEntities = deliveryRepository.findAll();
+    ArrayList<DeliveryDto> deliveryDtos = new ArrayList<>();
+
+    deliveryEntities.forEach(deliveryEntity -> {
+      deliveryDtos.add(DeliveryDtoMapper.toDto(DeliveryEntityMapper.toDomain(deliveryEntity)));
+    });
+
+    return deliveryDtos;
   }
 
 }
