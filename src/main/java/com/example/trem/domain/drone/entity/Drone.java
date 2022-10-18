@@ -3,22 +3,30 @@ package com.example.trem.domain.drone.entity;
 import com.example.trem.domain.delivery.entity.Delivery;
 import com.example.trem.domain.drone.exception.DroneException;
 import com.example.trem.domain.drone.factory.DroneValidatorFactory;
+import net.minidev.json.annotate.JsonIgnore;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Entity
+@Table(name = "drones")
 public class Drone implements IDrone {
 
-  private final UUID id;
+  @Id
+  private String id;
   private String name;
   private Double latitude;
   private Double longitude;
   private DroneStatus status;
+
+  @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
   private Set<Delivery> deliveries = new HashSet<>();
 
   public Drone(UUID id, String name, Double latitude, Double longitude, DroneStatus status) {
-    this.id = id;
+    this.id = id.toString();
     this.name = name;
     this.latitude = latitude;
     this.longitude = longitude;
@@ -35,7 +43,7 @@ public class Drone implements IDrone {
           DroneStatus status,
           Set<Delivery> deliveries
   ) {
-    this.id = id;
+    this.id = id.toString();
     this.name = name;
     this.latitude = latitude;
     this.longitude = longitude;
@@ -44,6 +52,8 @@ public class Drone implements IDrone {
 
     this.validate();
   }
+
+  protected Drone() {}
 
   public void rename(String name) {
     this.name = name;
@@ -63,16 +73,7 @@ public class Drone implements IDrone {
   }
 
   public void deliver(Delivery delivery) {
-    this.deliveries.stream()
-            .filter(d -> d.getId().equals(delivery.getId()))
-            .findFirst()
-            .ifPresent(d -> {
-              throw new DroneException("Delivery already assigned to this drone");
-            });
-
     delivery.proccesOrder();
-    this.deliveries.add(delivery);
-
     this.status = DroneStatus.DELIVERING;
   }
 
@@ -86,7 +87,7 @@ public class Drone implements IDrone {
 
   @Override
   public UUID getId() {
-    return id;
+    return UUID.fromString(this.id);
   }
 
   @Override
