@@ -42,16 +42,16 @@ public class TestDeliveryUseCase {
   @MockBean
   private VideoRepository videoRepository;
 
-  private final Iterable<Drone> drones = List.of(new Drone[]{
+  private final Iterable<Drone> drones = List.of(
           DroneFactory.create("Drone 1", 1.0, 1.0),
           DroneFactory.create("Drone 2", 2.0, 2.0),
           DroneFactory.create("Drone 3", 3.0, 3.0)
-  });
+  );
 
-  private final Iterable<Delivery> deliveries = List.of(new Delivery[]{
+  private final Iterable<Delivery> deliveries = List.of(
           DeliveryFactory.createWithDrone(drones.iterator().next()),
-          DeliveryFactory.createWithDrone(drones.iterator().next()),
-  });
+          DeliveryFactory.createWithDrone(drones.iterator().next())
+  );
 
   @Test
   @DisplayName("1 - should return all deliveries")

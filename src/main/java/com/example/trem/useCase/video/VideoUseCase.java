@@ -39,15 +39,14 @@ public class VideoUseCase {
     return VideoDtoMapper.toDto(optVideoEntity.get());
   }
 
-  public Iterable<VideoDto> getByDelivery(UUID deliveryId) {
-    Iterable<Video> videoEntities = videoRepository.findByDeliveryId(deliveryId.toString());
-    ArrayList<VideoDto> videoDtos = new ArrayList<>();
+  public VideoDto getByDelivery(UUID deliveryId) {
+    Optional<Video> optVideo = videoRepository.findByDeliveryId(deliveryId.toString());
 
-    videoEntities.forEach(videoEntity -> {
-      videoDtos.add(VideoDtoMapper.toDto(videoEntity));
-    });
+    if (optVideo.isEmpty()) {
+      throw new NotFoundException("Video not found");
+    }
 
-    return videoDtos;
+    return VideoDtoMapper.toDto(optVideo.get());
   }
 
 }
