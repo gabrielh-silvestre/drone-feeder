@@ -7,12 +7,14 @@ import com.example.trem.domain.drone.factory.DroneFactory;
 import com.example.trem.infra.repositories.delivery.DeliveryRepository;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import com.example.trem.useCase.drone.dto.CreateDroneDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @DisplayName("Integration tests for api DroneController")
 public class TestDroneController {
 
@@ -120,7 +123,7 @@ public class TestDroneController {
     mockMvc.perform(get("/drones")
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].name").value("Drone 1"))
+            .andExpect(jsonPath("$").isArray())
             .andExpect(status().isOk());
   }
 
