@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface VideoRepository extends JpaRepository<Video, String> {
+
+  Iterable<Video> findByDeliveryId(String deliveryId);
+
 }
