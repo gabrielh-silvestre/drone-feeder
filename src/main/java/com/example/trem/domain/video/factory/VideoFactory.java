@@ -7,12 +7,16 @@ import java.util.UUID;
 
 public class VideoFactory {
 
-  public static Video create(String fileName, Byte[] fileData) {
-    return new Video(UUID.randomUUID(), fileName, fileData);
+  public static Video create(Byte[] fileData) {
+    UUID id = UUID.randomUUID();
+    String randomFileName = id.toString() + ".mp4";
+    return new Video(id, randomFileName, fileData);
   }
 
-  public static Video createWithDelivery(String fileName, Byte[] fileData, Delivery delivery) {
-    return new Video(UUID.randomUUID(), fileName, fileData, delivery);
+  public static Video createWithDelivery(Byte[] fileData, Delivery delivery) {
+    UUID id = UUID.randomUUID();
+    String randomFileName = id.toString() + ".mp4";
+    return new Video(id, randomFileName, fileData, delivery);
   }
 
 }
