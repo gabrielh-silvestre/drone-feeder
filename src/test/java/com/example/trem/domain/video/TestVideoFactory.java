@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class TestVideoFactory {
 
   @Test
-  @DisplayName("should create a Video entity")
+  @DisplayName("1 - should create a Video entity")
   public void shouldCreateVideoEntity() {
     Video video = VideoFactory.create("Video-1.mp4", new Byte[0]);
 
@@ -26,7 +26,7 @@ public class TestVideoFactory {
   }
 
   @Test
-  @DisplayName("should create a Video entity with delivery")
+  @DisplayName("2 - should create a Video entity with delivery")
   public void shouldCreateVideoEntityWithDelivery() {
     Delivery delivery = DeliveryFactory.create();
     Video video = VideoFactory.createWithDelivery("Video-1.mp4", new Byte[0], delivery);

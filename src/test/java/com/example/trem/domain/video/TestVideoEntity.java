@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TestVideoEntity {
 
   @Test
-  @DisplayName("should create a Video entity")
+  @DisplayName("1 - should create a Video entity")
   public void shouldCreateVideoEntity() {
     Byte[] fakeFileData = new Byte[0];
     Video video = new Video(UUID.randomUUID(), "Video-1.mp4", fakeFileData);
@@ -30,7 +30,7 @@ public class TestVideoEntity {
   }
 
   @Test
-  @DisplayName("should create a Video entity with delivery")
+  @DisplayName("2 - should create a Video entity with delivery")
   public void shouldCreateVideoEntityWithDelivery() {
     Delivery delivery = DeliveryFactory.create();
     Byte[] fakeFileData = new Byte[0];
@@ -43,12 +43,12 @@ public class TestVideoEntity {
   }
 
   @Test
-  @DisplayName("should throw an exception when creating a Video entity with invalid data")
+  @DisplayName("3 - should throw an exception when creating a Video entity with invalid data")
   public void shouldThrowExceptionWhenCreatingVideoEntityWithInvalidData() {
     Byte[] fakeFileData = new Byte[0];
 
     assertThrows(
-            VideoException.class,
+            NullPointerException.class,
             () -> new Video(null, "Video-1.mp4", fakeFileData)
     );
 

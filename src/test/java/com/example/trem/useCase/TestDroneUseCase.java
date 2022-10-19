@@ -1,32 +1,29 @@
 package com.example.trem.useCase;
 
+import com.example.trem.domain.delivery.entity.Delivery;
 import com.example.trem.domain.delivery.factory.DeliveryFactory;
 import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.entity.DroneStatus;
 import com.example.trem.domain.drone.factory.DroneFactory;
-import com.example.trem.infra.repositories.delivery.DeliveryEntity;
-import com.example.trem.infra.repositories.delivery.DeliveryEntityMapper;
 import com.example.trem.infra.repositories.delivery.DeliveryRepository;
-import com.example.trem.infra.repositories.drone.DroneEntity;
-import com.example.trem.infra.repositories.drone.DroneEntityMapper;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import com.example.trem.useCase.drone.DroneUseCase;
 import com.example.trem.useCase.drone.dto.CreateDroneDto;
 import com.example.trem.useCase.drone.dto.DroneDto;
 import com.example.trem.useCase.drone.dto.UpdateDroneDto;
 import com.example.trem.useCase.shared.exception.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 @WebMvcTest(DroneUseCase.class)
@@ -42,184 +39,168 @@ public class TestDroneUseCase {
   @MockBean
   private DeliveryRepository deliveryRepository;
 
-  private Drone drone;
-  private DroneEntity droneEntity;
+  private final Iterable<Drone> drones = List.of(new Drone[]{
+          DroneFactory.create("Drone 1", 1.0, 1.0),
+          DroneFactory.create("Drone 2", 2.0, 2.0),
+          DroneFactory.create("Drone 3", 3.0, 3.0)
+  });
 
-  @BeforeEach
-  void setUp() {
-    drone = DroneFactory.create("Drone 1", 0.0, 0.0);
-    droneEntity = DroneEntityMapper.toEntity(drone);
+  private CreateDroneDto generateCreateDto() {
+    Drone drone = drones.iterator().next();
+
+    CreateDroneDto dto = new CreateDroneDto();
+    dto.setName(drone.getName());
+    dto.setLatitude(drone.getLatitude());
+    dto.setLongitude(drone.getLongitude());
+
+    return dto;
   }
 
-  private CreateDroneDto createDroneDto() {
-    CreateDroneDto dto = new CreateDroneDto();
+  private UpdateDroneDto generateUpdateDto() {
+    Drone drone = drones.iterator().next();
 
-    dto.setName(this.drone.getName());
-    dto.setLatitude(this.drone.getLatitude());
-    dto.setLongitude(this.drone.getLongitude());
+    UpdateDroneDto dto = new UpdateDroneDto();
+    dto.setName(drone.getName());
+    dto.setLatitude(drone.getLatitude());
+    dto.setLongitude(drone.getLongitude());
 
     return dto;
   }
 
   @Test
-  @DisplayName("should create a drone with success")
-  public void shouldCreateDroneWithSuccess() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
+  @DisplayName("1 - should return a list of drones")
+  public void shouldReturnAListOfDrones() {
+    doReturn(drones).when(droneRepository).findAll();
 
-    CreateDroneDto dto = this.createDroneDto();
-    DroneDto createdDrone = droneUseCase.create(dto);
+    Iterable<DroneDto> drones = droneUseCase.getAll();
 
-    assertNotNull(createdDrone.getId());
+    assertNotNull(drones);
+    assertEquals(3, ((List<DroneDto>) drones).size());
   }
 
   @Test
-  @DisplayName("should update a drone with success")
-  public void shouldUpdateDroneWithSuccess() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.of(droneEntity)).when(droneRepository).findById(any(UUID.class));
+  @DisplayName("2 - should return a drone by id")
+  public void shouldReturnADroneById() {
+    Drone droneMock = drones.iterator().next();
+    doReturn(Optional.of(droneMock)).when(droneRepository).findById(anyString());
 
-    CreateDroneDto createDto = this.createDroneDto();
-    DroneDto createdDrone = droneUseCase.create(createDto);
-
-    UpdateDroneDto updateDto = new UpdateDroneDto();
-
-    updateDto.setName("Drone 2");
-    updateDto.setLatitude(10.0);
-    updateDto.setLongitude(10.0);
-
-    DroneDto updatedDrone = droneUseCase.update(createdDrone.getId(), updateDto);
-
-    assertEquals(10.0, updatedDrone.getLatitude());
-    assertEquals(10.0, updatedDrone.getLongitude());
-  }
-
-  @Test
-  @DisplayName("should throw exception when drone not found on update")
-  public void shouldThrowExceptionWhenDroneNotFound() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.empty()).when(droneRepository).findById(any(UUID.class));
-
-    CreateDroneDto createDto = this.createDroneDto();
-    droneUseCase.create(createDto);
-
-    UpdateDroneDto updateDto = new UpdateDroneDto();
-    assertThrows(NotFoundException.class, () -> droneUseCase.update(UUID.randomUUID(), updateDto));
-  }
-
-  @Test
-  @DisplayName("should delete a drone with success")
-  public void shouldDeleteDroneWithSuccess() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.of(droneEntity)).when(droneRepository).findById(any(UUID.class));
-
-    CreateDroneDto createDto = this.createDroneDto();
-    DroneDto createdDrone = droneUseCase.create(createDto);
-
-    assertDoesNotThrow(() -> droneUseCase.delete(createdDrone.getId()));
-  }
-
-  @Test
-  @DisplayName("should throw exception when drone not found on delete")
-  public void shouldThrowExceptionWhenDroneNotFoundOnDelete() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.empty()).when(droneRepository).findById(any(UUID.class));
-
-    CreateDroneDto createDto = this.createDroneDto();
-    droneUseCase.create(createDto);
-
-    assertThrows(NotFoundException.class, () -> droneUseCase.delete(UUID.randomUUID()));
-  }
-
-  @Test
-  @DisplayName("should get a drone with success")
-  public void shouldGetDroneWithSuccess() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.of(droneEntity)).when(droneRepository).findById(any(UUID.class));
-
-    CreateDroneDto createDto = this.createDroneDto();
-    DroneDto createdDrone = droneUseCase.create(createDto);
-
-    DroneDto drone = droneUseCase.get(createdDrone.getId());
+    DroneDto drone = droneUseCase.get(droneMock.getId());
 
     assertNotNull(drone);
   }
 
   @Test
-  @DisplayName("should throw exception when drone not found on get")
-  public void shouldThrowExceptionWhenDroneNotFoundOnGet() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.empty()).when(droneRepository).findById(any(UUID.class));
+  @DisplayName("3 - should throw an exception when drone not found by id")
+  public void shouldThrowAnExceptionWhenDroneNotFound() {
+    doReturn(Optional.empty()).when(droneRepository).findById(anyString());
 
-    CreateDroneDto createDto = this.createDroneDto();
-    droneUseCase.create(createDto);
-
-    assertThrows(NotFoundException.class, () -> droneUseCase.get(UUID.randomUUID()));
+    assertThrows(
+            NotFoundException.class,
+            () -> droneUseCase.get(UUID.randomUUID()),
+            "Drone shoud not been found"
+    );
   }
 
   @Test
-  @DisplayName("should get all drones with success")
-  public void shouldGetAllDronesWithSuccess() {
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.of(droneEntity)).when(droneRepository).findById(any(UUID.class));
+  @DisplayName("4 - should create a drone")
+  public void shouldCreateADrone() {
+    Drone droneMock = drones.iterator().next();
+    doReturn(droneMock).when(droneRepository).save(droneMock);
 
-    CreateDroneDto createDto = this.createDroneDto();
-    droneUseCase.create(createDto);
+    CreateDroneDto createDroneDto = this.generateCreateDto();
 
-    Iterable<DroneDto> drones = droneUseCase.getAll();
+    DroneDto drone = droneUseCase.create(createDroneDto);
 
-    assertNotNull(drones);
+    assertNotNull(drone);
   }
 
   @Test
-  @DisplayName("should start a delivery with success")
-  public void shouldStartDeliveryWithSuccess() {
-    DeliveryEntity deliveryEntity = DeliveryEntityMapper.toEntity(DeliveryFactory.createWithDrone(drone));
+  @DisplayName("5 - should update a drone")
+  public void shouldUpdateADrone() {
+    Drone droneMock = drones.iterator().next();
+    doReturn(Optional.of(droneMock)).when(droneRepository).findById(anyString());
 
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.of(droneEntity)).when(droneRepository).findById(any(UUID.class));
+    UpdateDroneDto updateDroneDto = this.generateUpdateDto();
 
-    doReturn(deliveryEntity).when(deliveryRepository).save(any(DeliveryEntity.class));
-    doReturn(Optional.of(deliveryEntity)).when(deliveryRepository).findById(any(UUID.class));
+    DroneDto drone = droneUseCase.update(droneMock.getId(), updateDroneDto);
 
-    CreateDroneDto createDto = this.createDroneDto();
-    DroneDto createdDrone = droneUseCase.create(createDto);
-    DroneDto startDto = droneUseCase.startDelivery(createdDrone.getId(), deliveryEntity.getId());
-
-    assertEquals(DroneStatus.DELIVERING, startDto.getStatus());
+    assertNotNull(drone);
   }
 
   @Test
-  @DisplayName("should throw exception when drone not found on start delivery")
-  public void shouldThrowExceptionWhenDroneNotFoundOnStartDelivery() {
-    DeliveryEntity deliveryEntity = DeliveryEntityMapper.toEntity(DeliveryFactory.createWithDrone(drone));
+  @DisplayName("6 - should thrown an exception when drone not found to update")
+  public void shouldThrownAnExceptionWhenDroneNotFoundToUpdate() {
+    doReturn(Optional.empty()).when(droneRepository).findById(anyString());
 
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.empty()).when(droneRepository).findById(any(UUID.class));
+    UpdateDroneDto updateDroneDto = this.generateUpdateDto();
 
-    doReturn(deliveryEntity).when(deliveryRepository).save(any(DeliveryEntity.class));
-    doReturn(Optional.of(deliveryEntity)).when(deliveryRepository).findById(any(UUID.class));
-
-    CreateDroneDto createDto = this.createDroneDto();
-    droneUseCase.create(createDto);
-
-    assertThrows(NotFoundException.class, () -> droneUseCase.startDelivery(UUID.randomUUID(), deliveryEntity.getId()));
+    assertThrows(
+            NotFoundException.class,
+            () -> droneUseCase.update(UUID.randomUUID(), updateDroneDto),
+            "Drone shoud not been found"
+    );
   }
 
   @Test
-  @DisplayName("should throw exception when delivery not found on start delivery")
-  public void shouldThrowExceptionWhenDeliveryNotFoundOnStartDelivery() {
-    DeliveryEntity deliveryEntity = DeliveryEntityMapper.toEntity(DeliveryFactory.createWithDrone(drone));
+  @DisplayName("7 - should delete a drone")
+  public void shouldDeleteADrone() {
+    Drone droneMock = drones.iterator().next();
+    doReturn(Optional.of(droneMock)).when(droneRepository).findById(anyString());
 
-    doReturn(droneEntity).when(droneRepository).save(any(DroneEntity.class));
-    doReturn(Optional.of(droneEntity)).when(droneRepository).findById(any(UUID.class));
+    assertDoesNotThrow(() -> droneUseCase.delete(droneMock.getId()));
+  }
 
-    doReturn(deliveryEntity).when(deliveryRepository).save(any(DeliveryEntity.class));
-    doReturn(Optional.empty()).when(deliveryRepository).findById(any(UUID.class));
+  @Test
+  @DisplayName("8 - should thrown an exception when drone not found to delete")
+  public void shouldThrownAnExceptionWhenDroneNotFoundToDelete() {
+    doReturn(Optional.empty()).when(droneRepository).findById(anyString());
 
-    CreateDroneDto createDto = this.createDroneDto();
-    DroneDto createdDrone = droneUseCase.create(createDto);
+    assertThrows(
+            NotFoundException.class,
+            () -> droneUseCase.delete(UUID.randomUUID()),
+            "Drone shoud not been found"
+    );
+  }
 
-    assertThrows(NotFoundException.class, () -> droneUseCase.startDelivery(createdDrone.getId(), UUID.randomUUID()));
+  @Test
+  @DisplayName("9 - should start a delivery")
+  public void shouldStartADelivery() {
+    Drone droneMock = drones.iterator().next();
+    Delivery deliveryMock = DeliveryFactory.createWithDrone(droneMock);
+
+    doReturn(Optional.of(droneMock)).when(droneRepository).findById(anyString());
+    doReturn(Optional.of(deliveryMock)).when(deliveryRepository).findById(anyString());
+
+    DroneDto drone = droneUseCase.startDelivery(droneMock.getId(), deliveryMock.getId());
+
+    assertNotNull(drone);
+    assertEquals(drone.getStatus(), DroneStatus.DELIVERING);
+  }
+
+  @Test
+  @DisplayName("10 - should thrown an exception when drone not found to start delivery")
+  public void shouldThrownAnExceptionWhenDroneNotFoundToStartDelivery() {
+    doReturn(Optional.empty()).when(droneRepository).findById(anyString());
+
+    assertThrows(
+            NotFoundException.class,
+            () -> droneUseCase.startDelivery(UUID.randomUUID(), UUID.randomUUID()),
+            "Drone shoud not been found"
+    );
+  }
+
+  @Test
+  @DisplayName("11 - should thrown an exception when delivery not exists to start delivery")
+  public void shouldThrownAnExceptionWhenDeliveryNotExistsToStartDelivery() {
+    Drone droneMock = drones.iterator().next();
+    doReturn(Optional.of(droneMock)).when(droneRepository).findById(anyString());
+    doReturn(Optional.empty()).when(deliveryRepository).findById(anyString());
+
+    assertThrows(
+            NotFoundException.class,
+            () -> droneUseCase.startDelivery(droneMock.getId(), UUID.randomUUID()),
+            "Delivery shoud not been found"
+    );
   }
 
 }

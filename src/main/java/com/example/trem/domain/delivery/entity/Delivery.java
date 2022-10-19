@@ -5,20 +5,31 @@ import com.example.trem.domain.delivery.exception.InvalidStatusDeliveryException
 import com.example.trem.domain.delivery.factory.DeliveryValidatorFactory;
 import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.video.entity.Video;
+import net.minidev.json.annotate.JsonIgnore;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
+@Entity
+@Table(name = "deliveries")
 public class Delivery implements IDelivery {
 
-  private final UUID id;
+  @Id
+  private String id;
   private DeliveryStatus status;
-  private final LocalDateTime createdAt;
+  private LocalDateTime createdAt;
   private LocalDateTime orderDate;
   private LocalDateTime deliveryDate;
   private LocalDateTime cancelDate;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "drone_id")
   private Drone drone;
+
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "video_id")
+  @JsonIgnore
   private Video video;
 
   public Delivery(
@@ -29,7 +40,7 @@ public class Delivery implements IDelivery {
           LocalDateTime deliveryDate,
           LocalDateTime cancelDate
   ) {
-    this.id = id;
+    this.id = id.toString();
     this.status = status;
     this.createdAt = date;
     this.orderDate = orderDate;
@@ -48,7 +59,7 @@ public class Delivery implements IDelivery {
           LocalDateTime cancelDate,
           Drone drone
   ) {
-    this.id = id;
+    this.id = id.toString();
     this.status = status;
     this.createdAt = date;
     this.orderDate = orderDate;
@@ -69,7 +80,7 @@ public class Delivery implements IDelivery {
           Drone drone,
           Video video
   ) {
-    this.id = id;
+    this.id = id.toString();
     this.status = status;
     this.createdAt = date;
     this.orderDate = orderDate;
@@ -80,6 +91,8 @@ public class Delivery implements IDelivery {
 
     this.validate();
   }
+
+  protected Delivery() {}
 
   public void proccesOrder() throws DeliveryException {
     if (this.status != DeliveryStatus.PENDING) {
@@ -123,7 +136,7 @@ public class Delivery implements IDelivery {
 
   @Override
   public UUID getId() {
-    return id;
+    return UUID.fromString(this.id);
   }
 
   @Override

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TestDeliveryEntity {
 
   @Test
-  @DisplayName("should create a Delivery entity")
+  @DisplayName("1 - should create a Delivery entity")
   public void shouldCreateDeliveryEntity() {
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
@@ -43,7 +43,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should create a Delivery entity with drone")
+  @DisplayName("2 - should create a Delivery entity with drone")
   public void shouldCreateDeliveryEntityWithDrone() {
     Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
     Delivery delivery = new Delivery(
@@ -66,7 +66,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should process order")
+  @DisplayName("3 - should process order")
   public void shouldProcessOrder() {
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
@@ -84,7 +84,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should complete delivery")
+  @DisplayName("4 - should complete delivery")
   public void shouldCompleteDelivery() {
     Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
     Video video = VideoFactory.create("teste.mp4", new Byte[0]);
@@ -106,7 +106,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should cancel delivery")
+  @DisplayName("5 - should cancel delivery")
   public void shouldCancelDelivery() {
     Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
     Delivery delivery = new Delivery(
@@ -127,7 +127,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should throw exception when try to process order with status different from PENDING")
+  @DisplayName("6 - should throw exception when try to process order with status different from PENDING")
   public void shouldThrowExceptionWhenTryToProcessOrderWithStatusDifferentFromPending() {
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
@@ -142,7 +142,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should throw exception when try to complete delivery with status different from IN_PROGRESS")
+  @DisplayName("7 - should throw exception when try to complete delivery with status different from IN_PROGRESS")
   public void shouldThrowExceptionWhenTryToCompleteDeliveryWithStatusDifferentFromInProgress() {
     Video video = VideoFactory.create("teste.mp4", new Byte[0]);
     Delivery delivery = new Delivery(
@@ -158,7 +158,7 @@ public class TestDeliveryEntity {
   }
 
   @Test
-  @DisplayName("should throw exception when try to cancel delivery with status different from PENDING or IN_PROGRESS")
+  @DisplayName("8 - should throw exception when try to cancel delivery with status different from PENDING or IN_PROGRESS")
   public void shouldThrowExceptionWhenTryToCancelDeliveryWithStatusDifferentFromPendingOrInProgress() {
     Delivery delivery = new Delivery(
             UUID.randomUUID(),

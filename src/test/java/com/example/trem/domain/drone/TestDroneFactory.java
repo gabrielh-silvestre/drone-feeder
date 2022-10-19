@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TestDroneFactory {
 
   @Test
-  @DisplayName("should create a Drone entity")
+  @DisplayName("1 - should create a Drone entity")
   public void shouldCreateDroneEntity() {
     Drone drone = DroneFactory.create("Drone 1", 0.0, 0.0);
 

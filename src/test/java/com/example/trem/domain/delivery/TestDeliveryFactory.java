@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class TestDeliveryFactory {
 
   @Test
-  @DisplayName("should create a Delivery entity")
+  @DisplayName("1 - should create a Delivery entity")
   public void shouldCreateDeliveryEntity() {
     Delivery delivery = DeliveryFactory.create();
 
@@ -30,7 +30,7 @@ public class TestDeliveryFactory {
   }
 
   @Test
-  @DisplayName("should create a Delivery entity with drone")
+  @DisplayName("2 - should create a Delivery entity with drone")
   public void shouldCreateDeliveryEntityWithDrone() {
     Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
     Delivery delivery = DeliveryFactory.createWithDrone(drone);

@@ -31,7 +31,7 @@ public class DroneController {
     return this.droneUseCase.update(UUID.fromString(id), dto);
   }
 
-  @PutMapping("/{id}/start/{deliveryId}")
+  @PatchMapping("/{id}/start/{deliveryId}")
   @ResponseBody
   public DroneDto startDrone(@PathVariable String id, @PathVariable String deliveryId) {
     return this.droneUseCase.startDelivery(UUID.fromString(id), UUID.fromString(deliveryId));

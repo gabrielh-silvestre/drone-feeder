@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TestDroneEntity {
 
   @Test
-  @DisplayName("should create a Drone entity")
+  @DisplayName("1 - should create a Drone entity")
   public void shouldCreateDroneEntity() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
 
@@ -30,7 +30,7 @@ public class TestDroneEntity {
   }
 
   @Test
-  @DisplayName("should rename a Drone entity")
+  @DisplayName("2 - should rename a Drone entity")
   public void shouldRenameDroneEntity() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
     drone.rename("Drone 2");
@@ -39,7 +39,7 @@ public class TestDroneEntity {
   }
 
   @Test
-  @DisplayName("should update location of a Drone entity")
+  @DisplayName("3 - should update location of a Drone entity")
   public void shouldUpdateLocationDroneEntity() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
     drone.updateLocation(1.0, 1.0);
@@ -49,7 +49,7 @@ public class TestDroneEntity {
   }
 
   @Test
-  @DisplayName("should update status of a Drone entity")
+  @DisplayName("4 - should update status of a Drone entity")
   public void shouldUpdateStatusDroneEntity() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
     Delivery delivery = DeliveryFactory.create();
@@ -65,10 +65,10 @@ public class TestDroneEntity {
   }
 
   @Test
-  @DisplayName("should throw exception when creating a Drone entity with invalid data")
+  @DisplayName("5 - should throw exception when creating a Drone entity with invalid data")
   public void shouldThrowExceptionWhenCreatingDroneEntityWithInvalidData() {
     assertThrows(
-            DroneException.class,
+            NullPointerException.class,
             () -> new Drone(null, "Drone 1", 0.0, 0.0, DroneStatus.IDLE),
             "Drone id cannot be null"
     );
@@ -111,7 +111,7 @@ public class TestDroneEntity {
   }
 
   @Test
-  @DisplayName("should throw exception when update a Drone entity with invalid data")
+  @DisplayName("6 - should throw exception when update a Drone entity with invalid data")
   public void shouldThrowExceptionWhenUpdateDroneEntityWithInvalidData() {
     Drone drone = new Drone(UUID.randomUUID(), "Drone 1", 0.0, 0.0, DroneStatus.IDLE);
     Delivery delivery = DeliveryFactory.createWithDrone(drone);
@@ -132,15 +132,6 @@ public class TestDroneEntity {
             DroneException.class,
             () -> drone.rename("a".repeat(20)),
             "Drone name must be at most 12 characters long"
-    );
-
-    assertThrows(
-            DroneException.class,
-            () -> {
-              drone.deliver(delivery);
-              drone.deliver(delivery);
-            },
-            "Drone is already assigned to this delivery"
     );
 
     assertThrows(
