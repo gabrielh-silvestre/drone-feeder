@@ -9,6 +9,7 @@ import com.example.trem.infra.repositories.delivery.DeliveryRepository;
 import com.example.trem.infra.repositories.drone.DroneRepository;
 import com.example.trem.useCase.delivery.DeliveryUseCase;
 import com.example.trem.useCase.delivery.dto.DeliveryDto;
+import com.example.trem.useCase.delivery.dto.DeliveryWithVideoDto;
 import com.example.trem.useCase.shared.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,9 +54,9 @@ public class TestDeliveryUseCase {
   public void testGetAllDeliveries() {
     doReturn(deliveries).when(deliveryRepository).findAll();
 
-    Iterable<DeliveryDto> deliveries = deliveryUseCase.getAll();
+    Iterable<DeliveryWithVideoDto> deliveries = deliveryUseCase.getAll();
 
-    assertEquals(2, ((List<DeliveryDto>) deliveries).size());
+    assertEquals(2, ((List<DeliveryWithVideoDto>) deliveries).size());
   }
 
   @Test
