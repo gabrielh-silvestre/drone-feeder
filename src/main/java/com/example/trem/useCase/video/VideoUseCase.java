@@ -46,7 +46,7 @@ public class VideoUseCase {
     videoEntities.forEach(videoEntity -> {
       videoDtos.add(VideoDtoMapper.toDto(videoEntity));
     });
-    
+
     return videoDtos;
   }
 

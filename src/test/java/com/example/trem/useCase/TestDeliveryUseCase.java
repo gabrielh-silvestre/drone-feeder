@@ -7,6 +7,7 @@ import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.factory.DroneFactory;
 import com.example.trem.infra.repositories.delivery.DeliveryRepository;
 import com.example.trem.infra.repositories.drone.DroneRepository;
+import com.example.trem.infra.repositories.video.VideoRepository;
 import com.example.trem.useCase.delivery.DeliveryUseCase;
 import com.example.trem.useCase.delivery.dto.DeliveryDto;
 import com.example.trem.useCase.delivery.dto.DeliveryWithVideoDto;
@@ -37,6 +38,9 @@ public class TestDeliveryUseCase {
 
   @MockBean
   private DroneRepository droneRepository;
+
+  @MockBean
+  private VideoRepository videoRepository;
 
   private final Iterable<Drone> drones = List.of(new Drone[]{
           DroneFactory.create("Drone 1", 1.0, 1.0),

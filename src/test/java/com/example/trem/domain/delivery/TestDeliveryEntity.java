@@ -87,7 +87,7 @@ public class TestDeliveryEntity {
   @DisplayName("4 - should complete delivery")
   public void shouldCompleteDelivery() {
     Drone drone = DroneFactory.create("Test-Drone", 1.0, 1.0);
-    Video video = VideoFactory.create("teste.mp4", new Byte[0]);
+    Video video = VideoFactory.create(new Byte[0]);
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
             DeliveryStatus.PENDING,
@@ -144,7 +144,7 @@ public class TestDeliveryEntity {
   @Test
   @DisplayName("7 - should throw exception when try to complete delivery with status different from IN_PROGRESS")
   public void shouldThrowExceptionWhenTryToCompleteDeliveryWithStatusDifferentFromInProgress() {
-    Video video = VideoFactory.create("teste.mp4", new Byte[0]);
+    Video video = VideoFactory.create(new Byte[0]);
     Delivery delivery = new Delivery(
             UUID.randomUUID(),
             DeliveryStatus.PENDING,
