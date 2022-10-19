@@ -23,6 +23,12 @@ public class DeliveryController {
     return deliveryUseCase.create(droneId);
   }
 
+  @PatchMapping("/{id}/cancel")
+  @ResponseBody
+  public DeliveryDto cancel(@PathVariable UUID id) {
+    return deliveryUseCase.cancel(id);
+  }
+
   @GetMapping
   @ResponseBody
   public Iterable<DeliveryDto> getAll() {

@@ -39,21 +39,6 @@ public class DeliveryUseCase {
     return DeliveryDtoMapper.toDto(delivery);
   }
 
-  public DeliveryDto process(UUID id) {
-    Optional<Delivery> optDelivery = deliveryRepository.findById(id.toString());
-
-    if (optDelivery.isEmpty()) {
-      throw new NotFoundException("Delivery not found");
-    }
-
-    Delivery delivery = optDelivery.get();
-    delivery.proccesOrder();
-
-    deliveryRepository.save(delivery);
-
-    return DeliveryDtoMapper.toDto(delivery);
-  }
-
   public DeliveryDto cancel(UUID id) {
     Optional<Delivery> optDelivery = deliveryRepository.findById(id.toString());
 
