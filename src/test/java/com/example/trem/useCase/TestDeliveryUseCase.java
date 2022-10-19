@@ -7,8 +7,10 @@ import com.example.trem.domain.drone.entity.Drone;
 import com.example.trem.domain.drone.factory.DroneFactory;
 import com.example.trem.infra.repositories.delivery.DeliveryRepository;
 import com.example.trem.infra.repositories.drone.DroneRepository;
+import com.example.trem.infra.repositories.video.VideoRepository;
 import com.example.trem.useCase.delivery.DeliveryUseCase;
 import com.example.trem.useCase.delivery.dto.DeliveryDto;
+import com.example.trem.useCase.delivery.dto.DeliveryWithVideoDto;
 import com.example.trem.useCase.shared.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,25 +39,28 @@ public class TestDeliveryUseCase {
   @MockBean
   private DroneRepository droneRepository;
 
-  private final Iterable<Drone> drones = List.of(new Drone[]{
+  @MockBean
+  private VideoRepository videoRepository;
+
+  private final Iterable<Drone> drones = List.of(
           DroneFactory.create("Drone 1", 1.0, 1.0),
           DroneFactory.create("Drone 2", 2.0, 2.0),
           DroneFactory.create("Drone 3", 3.0, 3.0)
-  });
+  );
 
-  private final Iterable<Delivery> deliveries = List.of(new Delivery[]{
+  private final Iterable<Delivery> deliveries = List.of(
           DeliveryFactory.createWithDrone(drones.iterator().next()),
-          DeliveryFactory.createWithDrone(drones.iterator().next()),
-  });
+          DeliveryFactory.createWithDrone(drones.iterator().next())
+  );
 
   @Test
   @DisplayName("1 - should return all deliveries")
   public void testGetAllDeliveries() {
     doReturn(deliveries).when(deliveryRepository).findAll();
 
-    Iterable<DeliveryDto> deliveries = deliveryUseCase.getAll();
+    Iterable<DeliveryWithVideoDto> deliveries = deliveryUseCase.getAll();
 
-    assertEquals(2, ((List<DeliveryDto>) deliveries).size());
+    assertEquals(2, ((List<DeliveryWithVideoDto>) deliveries).size());
   }
 
   @Test

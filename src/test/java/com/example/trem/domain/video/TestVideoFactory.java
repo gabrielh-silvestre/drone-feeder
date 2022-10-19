@@ -17,10 +17,10 @@ public class TestVideoFactory {
   @Test
   @DisplayName("1 - should create a Video entity")
   public void shouldCreateVideoEntity() {
-    Video video = VideoFactory.create("Video-1.mp4", new Byte[0]);
+    Video video = VideoFactory.create(new Byte[0]);
 
     assertNotNull(video.getId());
-    assertEquals("Video-1.mp4", video.getFileName());
+    assertNotNull(video.getFileName());
     assertNotNull(video.getData());
     assertNull(video.getDelivery());
   }
@@ -29,10 +29,10 @@ public class TestVideoFactory {
   @DisplayName("2 - should create a Video entity with delivery")
   public void shouldCreateVideoEntityWithDelivery() {
     Delivery delivery = DeliveryFactory.create();
-    Video video = VideoFactory.createWithDelivery("Video-1.mp4", new Byte[0], delivery);
+    Video video = VideoFactory.createWithDelivery(new Byte[0], delivery);
 
     assertNotNull(video.getId());
-    assertEquals("Video-1.mp4", video.getFileName());
+    assertNotNull(video.getFileName());
     assertNotNull(video.getData());
     assertNotNull(video.getDelivery());
   }
