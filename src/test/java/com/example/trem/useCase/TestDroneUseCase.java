@@ -145,19 +145,19 @@ public class TestDroneUseCase {
   @DisplayName("7 - should delete a drone")
   public void shouldDeleteADrone() {
     Drone droneMock = drones.iterator().next();
-    doReturn(Optional.of(droneMock)).when(droneRepository).findById(anyString());
+    doReturn(true).when(droneRepository).existsByName(anyString());
 
-    assertDoesNotThrow(() -> droneUseCase.delete(droneMock.getId()));
+    assertDoesNotThrow(() -> droneUseCase.delete(droneMock.getName()));
   }
 
   @Test
   @DisplayName("8 - should thrown an exception when drone not found to delete")
   public void shouldThrownAnExceptionWhenDroneNotFoundToDelete() {
-    doReturn(Optional.empty()).when(droneRepository).findById(anyString());
+    doReturn(false).when(droneRepository).existsByName(anyString());
 
     assertThrows(
             NotFoundException.class,
-            () -> droneUseCase.delete(UUID.randomUUID()),
+            () -> droneUseCase.delete("Not a Drone"),
             "Drone shoud not been found"
     );
   }

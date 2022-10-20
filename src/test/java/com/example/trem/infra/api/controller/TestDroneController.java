@@ -50,14 +50,18 @@ public class TestDroneController {
   });
 
   private CreateDroneDto generateCreateDto() {
-    Drone drone = drones.iterator().next();
-
     CreateDroneDto dto = new CreateDroneDto();
-    dto.setName(drone.getName());
-    dto.setLatitude(drone.getLatitude());
-    dto.setLongitude(drone.getLongitude());
+    dto.setName("New Drone");
+    dto.setLatitude(1.0);
+    dto.setLongitude(1.0);
 
     return dto;
+  }
+
+  @BeforeEach
+  void setUp() {
+    droneRepository.saveAll(drones);
+    deliveryRepository.saveAll(deliveries);
   }
 
   @Test
@@ -69,7 +73,7 @@ public class TestDroneController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(new ObjectMapper().writeValueAsString(newDrone)))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name").value("Drone 1"))
+            .andExpect(jsonPath("$.name").value("New Drone"))
             .andExpect(status().isCreated());
   }
 
@@ -77,8 +81,6 @@ public class TestDroneController {
   @DisplayName("2 - should update a drone (PUT /drones/{id})")
   public void testUpdateDrone() throws Exception {
     Drone drone = drones.iterator().next();
-    droneRepository.saveAll(this.drones);
-
     drone.rename("Drone 2");
 
     mockMvc.perform(put("/drones/{id}", drone.getId())
@@ -94,8 +96,6 @@ public class TestDroneController {
   public void testStartDelivery() throws Exception {
     Drone drone = drones.iterator().next();
     Delivery delivery = deliveries.iterator().next();
-    droneRepository.saveAll(this.drones);
-    deliveryRepository.saveAll(this.deliveries);
 
     mockMvc.perform(patch("/drones/{id}/start/{deliveryId}", drone.getId(), delivery.getId())
                     .contentType(MediaType.APPLICATION_JSON))
@@ -118,8 +118,6 @@ public class TestDroneController {
   @Test
   @DisplayName("4 - should get all drones (GET /drones)")
   public void testGetAllDrones() throws Exception {
-    droneRepository.saveAll(this.drones);
-
     mockMvc.perform(get("/drones")
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -131,7 +129,6 @@ public class TestDroneController {
   @DisplayName("5 - should get a drone (GET /drones/{id})")
   public void testGetDrone() throws Exception {
     Drone drone = drones.iterator().next();
-    droneRepository.saveAll(this.drones);
 
     mockMvc.perform(get("/drones/{id}", drone.getId())
                     .contentType(MediaType.APPLICATION_JSON))

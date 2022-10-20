@@ -9,10 +9,12 @@ import com.example.trem.useCase.drone.dto.CreateDroneDto;
 import com.example.trem.useCase.drone.dto.DroneDto;
 import com.example.trem.useCase.drone.dto.DroneDtoMapper;
 import com.example.trem.useCase.drone.dto.UpdateDroneDto;
+import com.example.trem.useCase.shared.exception.ConflictException;
 import com.example.trem.useCase.shared.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +30,13 @@ public class DroneUseCase {
 
   public DroneDto create(CreateDroneDto dto) {
     Drone newDrone = DroneFactory.create(dto.getName(), dto.getLatitude(), dto.getLongitude());
+
+    boolean isDroneNameAlreadyUsed = droneRepository.existsByName(newDrone.getName());
+
+    if (isDroneNameAlreadyUsed) {
+      throw new ConflictException("Drone name already used");
+    }
+
     droneRepository.save(newDrone);
 
     return DroneDtoMapper.toDto(newDrone);
@@ -70,14 +79,15 @@ public class DroneUseCase {
     return DroneDtoMapper.toDto(foundDrone);
   }
 
-  public void delete(UUID id) {
-    Optional<Drone> optDrone = droneRepository.findById(id.toString());
+  @Transactional
+  public void delete(String name) {
+    boolean isDroneExist = droneRepository.existsByName(name);
 
-    if (optDrone.isEmpty()) {
+    if (!isDroneExist) {
       throw new NotFoundException("Drone not found");
     }
 
-    droneRepository.delete(optDrone.get());
+    droneRepository.deleteByName(name);
   }
 
   public DroneDto get(UUID id) {
