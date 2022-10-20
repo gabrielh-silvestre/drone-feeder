@@ -20,7 +20,7 @@ O Drone Feeder é uma aplicação REST de um sistema de delivery que permitirá 
 
 ### O desafio
 
-O Drone Feeder foi pensado para a prática geral dos conhecimentos sobre uma aplicação em Java com Spring Boot, cobrindo tópicos como: SOLID, REST, TDD e POO.
+O Drone Feeder foi pensado para a prática geral dos conhecimentos sobre uma aplicação em Java com Spring Boot, cobrindo tópicos como: SOLID, REST e POO.
 
 #### Ao consumir a API você será capaz de:
 - Registrar drones e entregas;
@@ -44,7 +44,7 @@ O Drone Feeder foi pensado para a prática geral dos conhecimentos sobre uma apl
 
 ### Build:
 * Faça o download do projeto ou clone através do comando `git clone :HttpOuSSH`;
-* Cria um arquivo `.env` para criar suas variáveis de ambiente com as seguintes chaves:
+* Crie um arquivo `.env` para criar suas variáveis de ambiente com as seguintes chaves:
 ```
 DB_USER=
 DB_ROOT_PASSWORD=
@@ -142,9 +142,9 @@ APP_LOCAL_PORT=
 }
 ```
 
-#### @DELETE ```/{id}```
+#### @DELETE ```/{name}```
 ##### Response:
-```{}```
+``` ```
 #
 ### ```/deliveries```
 #### @GET
