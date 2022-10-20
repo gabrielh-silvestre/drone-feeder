@@ -21,7 +21,7 @@ public class Drone implements IDrone {
   private Double longitude;
   private DroneStatus status;
 
-  @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "drone", fetch = FetchType.LAZY)
   @JsonIgnore
   private Set<Delivery> deliveries = new HashSet<>();
 

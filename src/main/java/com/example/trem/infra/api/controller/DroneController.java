@@ -37,10 +37,10 @@ public class DroneController {
     return this.droneUseCase.startDelivery(UUID.fromString(id), UUID.fromString(deliveryId));
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{name}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteDrone(@PathVariable String id) {
-    this.droneUseCase.delete(UUID.fromString(id));
+  public void deleteDrone(@PathVariable String name) {
+    this.droneUseCase.delete(name);
   }
 
   @GetMapping
